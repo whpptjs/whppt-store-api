@@ -6,7 +6,7 @@ const create: HttpModule<Product> = {
   authorise() {
     return Promise.resolve();
   },
-  exec({ $mongo: { $dbPub, $saveToPubWithEvents }, $id, createEvent }, createProductData) {
+  exec({ $mongo: { $dbPub, $saveToPubWithEvents, $startTransaction }, $id, createEvent }, createProductData) {
     assert(createProductData.domainId, 'Product requires a Domain Id.');
     assert(createProductData.name, 'Product requires a Name.');
     assert(createProductData.productCode, 'Product requires a Product Code.');
@@ -23,8 +23,9 @@ const create: HttpModule<Product> = {
         createProductData._id = $id();
         const event = createEvent('CreateProduct', createProductData);
         const newProduct = Object.assign({}, createProductData);
-
-        return $saveToPubWithEvents('products', newProduct, [event]);
+        return $startTransaction(session => {
+          return $saveToPubWithEvents('products', newProduct, [event], { session });
+        }).then(() => newProduct);
       });
   },
 };

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { HttpModule } from '@whppt/api-express';
 import { Product } from './Models/Product';
 
-const changeDetails: HttpModule<Product, { status: number }> = {
+const linkToUnleashed: HttpModule<Product, { status: number }> = {
   authorise() {
     return Promise.resolve();
   },
@@ -11,6 +11,7 @@ const changeDetails: HttpModule<Product, { status: number }> = {
     assert(productData._id, 'Product requires a Product Id.');
     assert(productData.name, 'Product requires a Name.');
     assert(productData.productCode, 'Product requires a Product Code.');
+    assert(productData.unleashedProductId, 'Product requires an Unleashed ProductId.');
 
     return $dbPub
       .collection('products')
@@ -19,8 +20,17 @@ const changeDetails: HttpModule<Product, { status: number }> = {
       })
       .then(product => {
         assert(product, 'Product does not exsist');
-        const event = createEvent('ProductDetailsChanged', productData);
-        Object.assign(product, productData);
+
+        const unleashedProductData = {
+          unleashedProductId: productData.unleashedProductId,
+          productCode: productData.productCode,
+          name: productData.name,
+          isActive: productData.isActive,
+          family: productData.family,
+        };
+
+        const event = createEvent('ProductLinkedToUnleashedProduct', { _id: productData._id, ...unleashedProductData });
+        Object.assign(product, unleashedProductData);
 
         return $startTransaction(session => {
           return $saveToPubWithEvents('products', product, [event], { session }).then(() => {
@@ -48,4 +58,4 @@ const salesForceItem = (item: Product) => {
   };
 };
 
-export default changeDetails;
+export default linkToUnleashed;
