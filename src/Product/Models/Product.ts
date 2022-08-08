@@ -11,7 +11,15 @@ export type Product = {
   vintage: string;
   bottleSize: string;
   isActive: boolean;
-  unleashedProductId: string;
+  unleashed: UnleashedOverride;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type UnleashedOverride = {
+  _id: string;
+  overrideProductCode: boolean;
+  overrideProductName: boolean;
+  overrideProductIsActive: boolean;
+  overrideProductFamily: boolean;
 };
