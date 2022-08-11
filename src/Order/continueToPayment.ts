@@ -1,15 +1,21 @@
 import { HttpModule } from '@whppt/api-express';
 
-const addGiftCard: HttpModule<{ status: number }> = {
+const continueToPayment: HttpModule<{ status: number }> = {
   authorise({ $roles }, { user }) {
     return $roles.validate(user, []);
   },
   exec() {
-    //   events:[
-    //     giftCardAddedToOrder
+    //   events: [
+    //     createContact,
+    //     billingAddressAddedToContact,
+    //     shippingAddressAddedToContact,
+    //     contactAddedToOrder,
+    //     billingAddressAddedToOrder,
+    //     shippingAddressAddedToOrder
+    //     shippingMethodChosenOnOrder
     // ]
     return Promise.resolve({ status: 200 });
   },
 };
 
-export default addGiftCard;
+export default continueToPayment;

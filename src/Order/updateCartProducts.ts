@@ -1,6 +1,6 @@
 import { HttpModule } from '@whppt/api-express';
 
-const removeProduct: HttpModule<{ status: number }> = {
+const updateCartProducts: HttpModule<{ status: number }> = {
   authorise({ $roles }, { user }) {
     return $roles.validate(user, []);
   },
@@ -13,4 +13,4 @@ const removeProduct: HttpModule<{ status: number }> = {
   },
 };
 
-export default removeProduct;
+export default updateCartProducts;

@@ -3,8 +3,8 @@ import { HttpModule } from '@whppt/api-express';
 import { Product } from './Models/Product';
 
 const create: HttpModule<Product> = {
-  authorise() {
-    return Promise.resolve();
+  authorise({ $roles }, { user }) {
+    return $roles.validate(user, []);
   },
   exec({ $mongo: { $dbPub, $saveToPubWithEvents, $startTransaction }, $id, createEvent }, createProductData) {
     assert(createProductData.domainId, 'Product requires a Domain Id.');
