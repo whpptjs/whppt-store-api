@@ -1,6 +1,6 @@
 {
   "name": "@whppt/store-api",
-  "version": "0.0.1-next.0",
+  "version": "0.0.1-next.1",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "types/index.d.ts",
