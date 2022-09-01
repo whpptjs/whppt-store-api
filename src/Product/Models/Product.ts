@@ -1,3 +1,5 @@
+import { WhpptImageData } from './Image';
+
 export type Product = {
   _id: string;
   domainId: string;
@@ -14,6 +16,7 @@ export type Product = {
   unleashed: UnleashedOverride;
   createdAt: Date;
   updatedAt: Date;
+  image: WhpptImageData;
 };
 
 export type UnleashedOverride = {
