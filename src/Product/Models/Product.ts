@@ -12,6 +12,7 @@ export type Product = {
   varietal: string;
   vintage: string;
   bottleSize: string;
+  price: string;
   isActive: boolean;
   unleashed: UnleashedOverride;
   createdAt: Date;

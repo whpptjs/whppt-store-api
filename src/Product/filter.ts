@@ -15,7 +15,7 @@ const filter: HttpModule<
   authorise() {
     return Promise.resolve();
   },
-  exec({ $mongo: { $dbPub } }, { domainId, limit, currentPage, filters }) {
+  exec({ $mongo: { $dbPub } }, { domainId, limit, currentPage, filters = {} }) {
     let query = {
       domainId,
     } as any;
@@ -38,7 +38,7 @@ const filter: HttpModule<
         $and: query.$and ? (query.$and = [...query.$and, { style: filters.style }]) : (query.$and = [{ style: filters.style }]),
       };
     }
-    const sortFilter = sortLookup(filters.sortBy);
+    const sortFilter = sortLookup(filters.sortBy || 'recommended');
 
     return Promise.all([
       $dbPub
@@ -59,18 +59,22 @@ export default filter;
 
 function sortLookup(key: string) {
   switch (key) {
-    case 'name (a-z)': {
-      name: 1;
-    }
-    case 'name (z-a)': {
-      name: -1;
-    }
-    case 'price (lowest to highest)': {
-      price: -1;
-    }
-    case 'price (highest to lowest)': {
-      price: 1;
-    }
+    case 'name (a-z)':
+      return {
+        name: 1,
+      };
+    case 'name (z-a)':
+      return {
+        name: -1,
+      };
+    case 'price (lowest to highest)':
+      return {
+        price: -1,
+      };
+    case 'price (highest to lowest)':
+      return {
+        price: 1,
+      };
     default:
       return { name: 1 };
   }
