@@ -1,3 +1,5 @@
+import { Product } from 'src/Product/Models/Product';
+
 export type Order = {
   _id: string;
   domainId: string;
@@ -13,8 +15,9 @@ export type Order = {
 
 export type OrderItem = {
   _id: string;
-  productId: string;
+  productId?: string;
   quantity: number;
+  product?: Product;
 };
 
 export type Payment = {

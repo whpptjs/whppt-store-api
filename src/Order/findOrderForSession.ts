@@ -1,26 +1,62 @@
 import { HttpModule } from '@whppt/api-express';
-import { Product } from 'src/Product/Models/Product';
 import { Order } from './Models/Order';
 
-const findOrderForSession: HttpModule<{ orderId: string }, { products: Product[] } & Order> = {
+const findOrderForSession: HttpModule<{ orderId?: string }, Order | {}> = {
   authorise({ $roles }, { user }) {
     return $roles.validate(user, []);
   },
-  exec({ $mongo: { $db, $dbPub } }, { orderId }) {
+  exec({ $mongo: { $dbPub } }, { orderId }) {
     const query = orderId ? { _id: orderId } : { status: { $ne: 'completed' } };
-
-    return $db
+    return $dbPub
       .collection<Order>('orders')
-      .findOne(query)
-      .then(order => {
-        const productIds = order.items.map(i => i.productId);
-        return $dbPub
-          .collection('products')
-          .find({ _id: { $in: productIds } })
-          .toArray()
-          .then(products => {
-            return { ...order, products };
-          });
+      .aggregate([
+        {
+          $match: query,
+        },
+        {
+          $limit: 1,
+        },
+        {
+          $unwind: {
+            path: '$items',
+          },
+        },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'items.productId',
+            foreignField: '_id',
+            as: 'items.product',
+          },
+        },
+        {
+          $unwind: {
+            path: '$items.product',
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            items: {
+              $push: {
+                id: '$items._id',
+                quantity: '$items.quantity',
+                product: {
+                  _id: '$items.product._id',
+                  name: '$items.product.name',
+                  image: '$items.product.image',
+                  vintage: '$items.product.vintage',
+                  stockKeepingUnit: '$items.product.stockKeepingUnit',
+                  price: '$items.product.price',
+                },
+              },
+            },
+          },
+        },
+      ])
+      .toArray()
+      .then(orders => {
+        return orders[0] || {};
       });
   },
 };

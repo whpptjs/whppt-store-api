@@ -22,13 +22,9 @@ const changeDetails: HttpModule<Product, { status: number }> = {
         const event = createEvent('ProductDetailsChanged', productData);
         Object.assign(product, productData);
 
-        console.log("🚀 0")
         return $startTransaction(session => {
-          console.log("🚀 0-.1")
           return $saveToPubWithEvents('products', product, [event], { session }).then(() => {
-            console.log("🚀 1", salesForceItem(product))
             return $salesforce.$Oauth().then((token: string) => {
-              console.log("🚀 2", salesForceItem(product))
               return $salesforce.$upsert(token, product._id, salesForceItem(product));
             });
           });
