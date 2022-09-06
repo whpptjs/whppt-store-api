@@ -6,7 +6,11 @@ const addProduct: HttpModule<{ productId: string; quantity: number; orderId?: st
   authorise({ $roles }, { user }) {
     return $roles.validate(user, []);
   },
-  exec({ $id, $mongo: { $dbPub, $saveToPubWithEvents, $startTransaction }, createEvent }, { productId, quantity, orderId }) {
+  exec({ $id, $mongo: { $dbPub, $saveToPubWithEvents, $startTransaction }, createEvent }, { productId, quantity, orderId, ...a }) {
+    console.log('🚀 ~ file: addProduct.ts ~ line 10 ~ exec ~ orderId', orderId);
+    console.log('🚀 ~ file: addProduct.ts ~ line 10 ~ exec ~ quantity', quantity);
+    console.log('🚀 ~ file: addProduct.ts ~ line 10 ~ exec ~ a', a);
+    console.log('🚀 ~ file: addProduct.ts ~ line 10 ~ exec ~ productId', productId);
     assert(productId, 'Product Id is required.');
     assert(quantity, 'Product quantity is required.');
 
@@ -26,7 +30,7 @@ const addProduct: HttpModule<{ productId: string; quantity: number; orderId?: st
         const events = [] as any[];
         if (!loadedOrder || !loadedOrder._id) events.push(createEvent('CreatedOrder', order));
         const productOrder = { _id: $id(), productId, quantity };
-        Object.assign(order, [...order.items, productOrder]);
+        Object.assign(order.items, [...order.items, productOrder]);
         events.push(createEvent('ProductOrderAddedToOrder', { _id: order._id, productOrder }));
 
         return $startTransaction(session => {

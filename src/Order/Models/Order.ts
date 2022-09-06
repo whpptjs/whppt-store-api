@@ -9,7 +9,7 @@ export type Order = {
   contactId: string;
   discountIds: string;
   shipping: AusPostShipping;
-  status: 'pending' | 'pending';
+  orderStatus: 'pending' | 'pending';
   payment: Payment;
   createdAt: Date;
   updatedAt: Date;

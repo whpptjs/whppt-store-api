@@ -6,7 +6,7 @@ const findOrderForSession: HttpModule<{ orderId?: string }, Order | {}> = {
     return $roles.validate(user, []);
   },
   exec({ $mongo: { $dbPub } }, { orderId }) {
-    const query = orderId ? { _id: orderId } : { status: { $ne: 'completed' } };
+    const query = orderId ? { _id: orderId } : { orderStatus: { $ne: 'completed' } };
     return $dbPub
       .collection<Order>('orders')
       .aggregate([
