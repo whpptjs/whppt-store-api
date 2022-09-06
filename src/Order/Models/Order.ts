@@ -11,6 +11,8 @@ export type Order = {
   shipping: AusPostShipping;
   status: 'pending' | 'pending';
   payment: Payment;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type OrderItem = {
