@@ -1,6 +1,5 @@
-import addProduct from './addProduct';
-import removeProduct from './removeProduct';
-import updateCartProducts from './updateCartProducts';
+import amendProductOnOrder from './amendProductOnOrder';
+
 import addGiftCard from './addGiftCard';
 import removeGiftCard from './removeGiftCard';
 import addDiscountCode from './addDiscountCode';
@@ -15,9 +14,7 @@ import findOrderForSession from './findOrderForSession';
 import loadCart from './loadCart';
 
 export const order = {
-  addProduct,
-  removeProduct,
-  updateCartProducts,
+  amendProductOnOrder,
   addGiftCard,
   removeGiftCard,
   addDiscountCode,
