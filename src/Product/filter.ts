@@ -13,7 +13,6 @@ const filter: HttpModule<
   { products: Product[]; total: number }
 > = {
   exec({ $database }, { domainId, limit, currentPage, filters = {} }) {
-    console.log('🚀 ~ file: filter.ts ~ line 16 ~ exec ~ filters', filters.collection);
     let query = {
       domainId,
     } as any;

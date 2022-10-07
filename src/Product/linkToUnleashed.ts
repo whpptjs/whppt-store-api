@@ -30,8 +30,6 @@ const productLinkedToUnleashed: HttpModule<Product, void> = {
             product.isActive = productData.unleashed.overrideProductIsActive ? productData.isActive : product.isActive;
             product.family = productData.unleashed.overrideProductFamily ? productData.family : product.family;
 
-            console.log('🚀 ~  productData._id', productData._id);
-            console.log('🚀 unleashedthen ~ productData._id', productData.unleashed._id);
             events.push(
               createEvent('ProductDetailsUpdatedViaUnleashed', {
                 _id: productData._id,
