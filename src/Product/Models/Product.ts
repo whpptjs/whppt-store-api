@@ -5,25 +5,28 @@ export type Product = {
   domainId: string;
   name: string;
   productCode: string;
-  description: string;
-  family: string;
-  stockKeepingUnit: string;
-  quantityUnitOfMeasure: string;
-  varietal: string;
-  vintage: string;
-  bottleSize: string;
-  price: string;
+  description?: string;
+  family?: string;
+  stockKeepingUnit?: string;
+  quantityUnitOfMeasure?: string;
+  varietal?: string;
+  vintage?: string;
+  bottleSize?: string;
+  price?: string;
   isActive: boolean;
   unleashed: UnleashedOverride;
-  createdAt: Date;
-  updatedAt: Date;
-  image: WhpptImageData;
+  createdAt?: Date;
+  updatedAt?: Date;
+  image?: WhpptImageData;
+  config?: {
+    [key: string]: any;
+  };
 };
 
 export type UnleashedOverride = {
-  _id: string;
-  overrideProductCode: boolean;
-  overrideProductName: boolean;
-  overrideProductIsActive: boolean;
-  overrideProductFamily: boolean;
+  _id?: string;
+  overrideProductCode?: boolean;
+  overrideProductName?: boolean;
+  overrideProductIsActive?: boolean;
+  overrideProductFamily?: boolean;
 };

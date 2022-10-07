@@ -1,32 +1,39 @@
 import assert from 'assert';
 import { HttpModule } from '@whppt/api-express';
 import { Product } from './Models/Product';
+import { User } from '@whppt/next/types/Security/Model/User';
 
-const create: HttpModule<Product> = {
-  authorise({ $roles }, { user }) {
-    return $roles.validate(user, []);
+const create: HttpModule<{ domainId: string; name: string; productCode: string; user: User }, Product> = {
+  authorise({ $identity }, { user }) {
+    return $identity.isUser(user);
   },
-  exec({ $mongo: { $dbPub, $saveToPubWithEvents, $startTransaction }, $id, createEvent }, createProductData) {
-    assert(createProductData.domainId, 'Product requires a Domain Id.');
-    assert(createProductData.name, 'Product requires a Name.');
-    assert(createProductData.productCode, 'Product requires a Product Code.');
+  exec({ $database, $id, createEvent }, { domainId, name, productCode, user }) {
+    assert(domainId, 'Product requires a Domain Id.');
+    assert(name, 'Product requires a Name.');
+    assert(productCode, 'Product requires a Product Code.');
+    return $database.then(({ document, startTransaction }) => {
+      return document.query<Product>('products', { filter: { name, productCode, domainId } }).then(_product => {
+        assert(!_product, `Product already exsits with Code: ${productCode} and Name ${name}`);
 
-    return $dbPub
-      .collection('products')
-      .findOne<Product>({
-        name: createProductData.name,
-        productCode: createProductData.productCode,
-        domainId: createProductData.domainId,
-      })
-      .then(product => {
-        assert(!product, `Product already exsits with Code: ${createProductData.productCode} and Name ${createProductData.name}`);
-        createProductData._id = $id();
-        const event = createEvent('CreateProduct', createProductData);
-        const newProduct = Object.assign({}, createProductData);
-        return $startTransaction(session => {
-          return $saveToPubWithEvents('products', newProduct, [event], { session });
-        }).then(() => newProduct);
+        const product = Object.assign(
+          {},
+          {
+            _id: $id.newId(),
+            domainId,
+            name,
+            productCode,
+            isActive: false,
+            unleashed: {},
+            config: {},
+          }
+        );
+        const event = createEvent('CreateProduct', { product, user: { _id: user._id, username: user.username } });
+
+        return startTransaction(session => {
+          return document.saveWithEvents('products', product, [event], { session });
+        }).then(() => product);
       });
+    });
   },
 };
 

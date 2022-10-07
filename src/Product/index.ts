@@ -6,6 +6,8 @@ import changeDetails from './changeDetails';
 import changeImage from './changeImage';
 import linkToUnleashed from './linkToUnleashed';
 import getFilters from './getFilters';
+import saveConfig from './saveConfig';
+import publish from './publish';
 
 export const product = {
   list,
@@ -16,4 +18,6 @@ export const product = {
   changeImage,
   linkToUnleashed,
   getFilters,
+  saveConfig,
+  publish,
 };
