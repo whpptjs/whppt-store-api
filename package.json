@@ -41,7 +41,7 @@
     "publish:major": "yarn test && yarn build && standard-version --release-as major && yarn publish && git push --follow-tags"
   },
   "dependencies": {
-    "@whppt/api-express": "^2.0.0-rc.49",
+    "@whppt/api-express": "2.0.1",
     "@whppt/next": "^0.0.3-next.4",
     "react": "^18.2.0"
   }

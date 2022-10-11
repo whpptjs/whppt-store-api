@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { HttpModule, replaceInList } from '@whppt/api-express';
+import { HttpModule } from '@whppt/api-express';
 import { Product, WhpptProductImageData } from './Models/Product';
 
 export type ChangeProductImageArgs = {
@@ -22,16 +22,18 @@ const changeImage: HttpModule<ChangeProductImageArgs, void> = {
     return $database.then(({ document, startTransaction }) => {
       return document.fetch<Product>('products', productId).then(product => {
         assert(product, 'Product does not exsist');
-        assert(product.images, 'Could not find image to save on product');
+        assert(!product.images.find(i => i._id === image._id), 'Product already has an exsiting id for that image.');
 
-        const events = [createEvent('ProductImageDetailsChanged', { _id: productId, image })];
+        const events = [createEvent('ProductImageAdded', { _id: productId, image })];
+        Object.assign(product, { domainId, productId, images: product.images ? [...product.images, image] : [image] });
 
-        if (featureImageId && product.featureImageId !== featureImageId) {
+        if (!product.featureImageId) {
+          events.push(createEvent('ProductFeatureImageSet', { _id: productId, featureImageId: image._id }));
+          Object.assign(product, { domainId, productId, featureImageId: image._id });
+        } else if (featureImageId && product.featureImageId !== featureImageId) {
           events.push(createEvent('ProductFeatureImageChanged', { _id: productId, featureImageId }));
           Object.assign(product, { domainId, productId, featureImageId });
         }
-
-        Object.assign(product, { domainId, productId, images: replaceInList(product.images, image) });
 
         return startTransaction(session => {
           return document.saveWithEvents('products', product, events, { session });

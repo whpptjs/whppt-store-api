@@ -23,8 +23,9 @@ const create: HttpModule<{ domainId: string; name: string; productCode: string; 
             name,
             productCode,
             isActive: false,
-            unleashed: {},
             config: {},
+            customFields: {},
+            images: [],
           }
         );
         const event = createEvent('CreateProduct', { product, user: { _id: user._id, username: user.username } });

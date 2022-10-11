@@ -37,11 +37,11 @@ const salesForceItem = (item: Product) => {
     ProductCode: item.productCode,
     Description: item.description,
     Family: item.family,
-    StockKeepingUnit: item.stockKeepingUnit,
-    QuantityUnitOfMeasure: item.quantityUnitOfMeasure,
-    Varietal__c: item.varietal,
-    Vintage__c: item.vintage,
-    Bottle_Size__c: item.bottleSize,
+    StockKeepingUnit: item.customFields.stockKeepingUnit,
+    QuantityUnitOfMeasure: item.customFields.quantityUnitOfMeasure,
+    Varietal__c: item.customFields.varietal,
+    Vintage__c: item.customFields.vintage,
+    Bottle_Size__c: item.customFields.bottleSize,
     IsActive: item.isActive,
   };
 };

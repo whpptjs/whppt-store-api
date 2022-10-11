@@ -1,4 +1,6 @@
-import { WhpptImageData } from './Image';
+import { WhpptImageData } from '@whppt/next';
+
+export type WhpptProductImageData = WhpptImageData & { _id: string };
 
 export type Product = {
   _id: string;
@@ -7,26 +9,19 @@ export type Product = {
   productCode: string;
   description?: string;
   family?: string;
-  stockKeepingUnit?: string;
-  quantityUnitOfMeasure?: string;
-  varietal?: string;
-  vintage?: string;
-  bottleSize?: string;
+  quantityAvailable?: string;
+  canPlaceOrderQuantity?: string;
+  unitOfMeasure?: string;
   price?: string;
   isActive: boolean;
-  unleashed: UnleashedOverride;
   createdAt?: Date;
   updatedAt?: Date;
-  image?: WhpptImageData;
+  featureImageId?: string;
+  images: WhpptProductImageData[];
   config?: {
     [key: string]: any;
   };
-};
-
-export type UnleashedOverride = {
-  _id?: string;
-  overrideProductCode?: boolean;
-  overrideProductName?: boolean;
-  overrideProductIsActive?: boolean;
-  overrideProductFamily?: boolean;
+  customFields: {
+    [key: string]: string | undefined;
+  };
 };

@@ -1,5 +1,5 @@
 import { HttpModule } from '@whppt/api-express';
-import { DatabaseDocument } from '@whppt/api-express/types/Services';
+import { DatabaseDocument } from '@whppt/api-express/types/Services/Database';
 import { UnleashedProduct } from './Models/UnleashedProduct';
 
 const { flatMap } = require('lodash');
