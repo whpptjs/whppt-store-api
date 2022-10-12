@@ -44,3 +44,42 @@ export type Member = {
   contactId: string;
   amountSpent: number;
 };
+
+export type InformationDetails = {
+  email: string;
+  phone: string;
+  emailNews: boolean;
+};
+
+export type AddressDetails = {
+  number: string;
+  street: string;
+  suburb: string;
+  city: string;
+  state: string;
+  country: string;
+  postCode: string;
+};
+
+export type ShippingDetails = {
+  firstName: string;
+  lastName: string;
+  company: string;
+  contact: string;
+  address: AddressDetails;
+  express: boolean;
+  shippingCost: number;
+};
+
+export type BillingDetails = {
+  contact: string;
+  address: AddressDetails;
+  discountCode: string;
+  useSameAsShipping: boolean;
+  express: boolean;
+};
+
+export type PaymentDetails = {
+  contact: string;
+  express: boolean;
+};
