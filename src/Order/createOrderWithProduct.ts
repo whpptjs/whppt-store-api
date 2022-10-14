@@ -23,9 +23,9 @@ const createOrderWithProduct: HttpModule<{ productId: string; quantity: number; 
         const events = [] as any[];
 
         events.push(createEvent('CreatedOrder', order));
-        const productOrder = { _id: $id.newId(), productId, quantity: quantityAsNumber };
-        events.push(createEvent('OrderItemAddedToOrder', { _id: order._id, productOrder }));
-        Object.assign(order.items, [productOrder]);
+        const orderItem = { _id: $id.newId(), productId, quantity: quantityAsNumber };
+        events.push(createEvent('OrderItemAddedToOrder', { _id: order._id, orderItem }));
+        Object.assign(order.items, [orderItem]);
 
         return startTransaction(session => {
           return document.saveWithEvents('orders', order, events, { session });

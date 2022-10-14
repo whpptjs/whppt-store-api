@@ -26,9 +26,9 @@ const changeOrderItemQuantity: HttpModule<{ productId: string; quantity: number;
           const productAlreadyOnOrder = order.items.find(i => i.productId === productId);
 
           if (!productAlreadyOnOrder) {
-            const productOrder = { _id: $id.newId(), productId, quantity: quantityAsNumber };
-            events.push(createEvent('OrderItemAddedToOrder', { _id: order._id, productOrder }));
-            Object.assign(order.items, [...order.items, productOrder]);
+            const orderItem = { _id: $id.newId(), productId, quantity: quantityAsNumber };
+            events.push(createEvent('OrderItemAddedToOrder', { _id: order._id, orderItem }));
+            Object.assign(order.items, [...order.items, orderItem]);
           } else if (productAlreadyOnOrder.quantity < quantityAsNumber) {
             events.push(
               createEvent('OrderItemQuantityIncreased', {
