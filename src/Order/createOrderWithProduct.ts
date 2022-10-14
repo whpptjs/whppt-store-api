@@ -2,7 +2,7 @@ import { HttpModule } from '@whppt/api-express';
 import assert from 'assert';
 import { Order } from './Models/Order';
 
-const addProduct: HttpModule<{ productId: string; quantity: number; orderId?: string | undefined }, void> = {
+const createOrderWithProduct: HttpModule<{ productId: string; quantity: number; orderId?: string | undefined }, void> = {
   authorise({ $roles }, { user }) {
     return $roles.validate(user, []);
   },
@@ -35,4 +35,4 @@ const addProduct: HttpModule<{ productId: string; quantity: number; orderId?: st
   },
 };
 
-export default addProduct;
+export default createOrderWithProduct;
