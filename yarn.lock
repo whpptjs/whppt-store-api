@@ -2005,10 +2005,10 @@
     "@typescript-eslint/types" "5.31.0"
     eslint-visitor-keys "^3.3.0"
 
-"@whppt/api-express@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@whppt/api-express/-/api-express-2.0.1.tgz#b1766037657e427ac8135d94c9255f9630d324bf"
-  integrity sha512-Ye6jagXgdwJeae+4tcpGcOkfeXYj/fgnfg9VeLmiufgVtb1IxlZwrHPsiE759mClSRBpVOXYwUv0f9wDhiZgqw==
+"@whppt/api-express@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@whppt/api-express/-/api-express-2.0.3.tgz#e0c394631b51bfc9d0a7a6b6992185e625ff2bd0"
+  integrity sha512-6yZWFOtVodn7azeXxSIxNTCYhSwvH0h6R7+dgAw4rL2z7PXe8rJzwyInm1brNdqybolx63nzJhLnuEAI6+Sffw==
   dependencies:
     "@aws-sdk/client-s3" "^3.180.0"
     bcryptjs "^2.4.3"
