@@ -16,7 +16,7 @@ export const saveConfig: HttpModule<SaveConfigParams, void> = {
       return document.fetch<Product>('products', productId).then(product => {
         const events = [] as any[];
         product.config ? (product.config[key] = value) : (product.config = { [key]: value });
-        events.push(setEvent('ProductConfigSaved', { _id: productId, config: product.config }));
+        events.push(setEvent('ProductConfigSaved', { _id: productId, key, value }));
         return startTransaction(session => {
           return document.saveWithEvents('products', product, events, { session }).then(() => {});
         });
