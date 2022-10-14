@@ -20,6 +20,7 @@ const publish: HttpModule<{ productId: string }, void> = {
               document.saveWithEvents('products', product, [event], { session }),
               document.publish('products', product, { session }),
             ]).then(() => {
+              // TODO Consider moving this to an event.
               return $salesforce.$Oauth().then((token: string) => {
                 return $salesforce.$upsert(token, product._id, salesForceItem(product));
               });
