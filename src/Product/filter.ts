@@ -12,12 +12,10 @@ const filter: HttpModule<
   { domainId: string; limit: string; currentPage: string; filters: ProductListFilters },
   { products: Product[]; total: number }
 > = {
-  authorise() {
-    return Promise.resolve();
-  },
-  exec({ $mongo: { $dbPub } }, { domainId, limit, currentPage, filters = {} }) {
+  exec({ $database }, { domainId, limit, currentPage, filters = {} }) {
     let query = {
       domainId,
+      isActive: true,
     } as any;
 
     if (filters.vintage && filters.vintage !== 'all') {
@@ -38,19 +36,21 @@ const filter: HttpModule<
         $and: query.$and ? (query.$and = [...query.$and, { style: filters.style }]) : (query.$and = [{ style: filters.style }]),
       };
     }
+
     const sortFilter = sortLookup(filters.sortBy || 'recommended');
 
-    return Promise.all([
-      $dbPub
-        .collection('products')
-        .find<Product>(query)
-        .sort(sortFilter as any)
-        .skip(parseInt(limit) * parseInt(currentPage))
-        .limit(parseInt(limit))
-        .toArray(),
-      $dbPub.collection('products').countDocuments(query),
-    ]).then(([products, total = 0]) => {
-      return { products, total };
+    return $database.then(({ queryDocuments, countDocuments }) => {
+      return Promise.all([
+        queryDocuments<Product>('products', {
+          filter: query,
+          sort: sortFilter,
+          skip: parseInt(limit) * parseInt(currentPage),
+          limit: parseInt(limit),
+        }),
+        countDocuments('products', { filter: query }),
+      ]).then(([products, total = 0]) => {
+        return { products, total };
+      });
     });
   },
 };

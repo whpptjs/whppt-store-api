@@ -1,24 +1,24 @@
 import { HttpModule } from '@whppt/api-express';
 import { UnleashedProduct } from './Models/UnleashedProduct';
 
-const list: HttpModule<UnleashedProduct[]> = {
-  authorise() {
-    return Promise.resolve();
+const list: HttpModule<{}, UnleashedProduct[]> = {
+  authorise({ $identity }, { user }) {
+    return $identity.isUser(user);
   },
-  exec({ $mongo: { $db } }) {
-    return $db
-      .collection('unleashed')
-      .find({})
-      .project({
-        _id: 1,
-        IsSellable: 1,
-        ProductCode: 1,
-        ProductDescription: 1,
-        ProductGroup: 1,
-        UnitOfMeasure: 1,
-      })
-      .toArray()
-      .then(items => items as UnleashedProduct[]);
+  exec({ $database }) {
+    return $database.then(({ queryDocuments }) => {
+      return queryDocuments<UnleashedProduct>('unleashed', {
+        filter: {},
+        projection: {
+          _id: 1,
+          IsSellable: 1,
+          ProductCode: 1,
+          ProductDescription: 1,
+          ProductGroup: 1,
+          UnitOfMeasure: 1,
+        },
+      });
+    });
   },
 };
 export default list;
