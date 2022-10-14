@@ -2,6 +2,9 @@ import { HttpModule } from '@whppt/api-express';
 import { Product } from './Models/Product';
 
 const list: HttpModule<{ domainId: string; limit: string; currentPage: string; search: string }, { products: Product[]; total: number }> = {
+  authorise({ $identity }, { user }) {
+    return $identity.isUser(user);
+  },
   exec({ $database }, { domainId, limit, currentPage, search }) {
     let query = {
       domainId,

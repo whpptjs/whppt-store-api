@@ -15,6 +15,7 @@ const filter: HttpModule<
   exec({ $database }, { domainId, limit, currentPage, filters = {} }) {
     let query = {
       domainId,
+      isActive: true,
     } as any;
 
     if (filters.vintage && filters.vintage !== 'all') {
@@ -35,6 +36,7 @@ const filter: HttpModule<
         $and: query.$and ? (query.$and = [...query.$and, { style: filters.style }]) : (query.$and = [{ style: filters.style }]),
       };
     }
+
     const sortFilter = sortLookup(filters.sortBy || 'recommended');
 
     return $database.then(({ queryDocuments, countDocuments }) => {

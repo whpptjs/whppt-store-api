@@ -3,7 +3,14 @@ import { HttpModule } from '@whppt/api-express';
 import { Product } from './Models/Product';
 import { User } from '@whppt/next/types/Security/Model/User';
 
-const create: HttpModule<{ domainId: string; name: string; productCode: string; user: User }, Product> = {
+export type CreateProductArgs = {
+  domainId: string;
+  name: string;
+  productCode: string;
+  user: User;
+};
+
+const create: HttpModule<CreateProductArgs, Product> = {
   authorise({ $identity }, { user }) {
     return $identity.isUser(user);
   },

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { HttpModule } from '@whppt/api-express';
 import { Product } from './Models/Product';
 
-const changeDetails: HttpModule<{ productId: string }, void> = {
+const publish: HttpModule<{ productId: string }, void> = {
   authorise({ $identity }, { user }) {
     return $identity.isUser(user);
   },
@@ -46,4 +46,4 @@ const salesForceItem = (item: Product) => {
   };
 };
 
-export default changeDetails;
+export default publish;

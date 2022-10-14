@@ -27,14 +27,14 @@ const addImage: HttpModule<AddProductImageArgs, WhpptProductImageData> = {
           _id: $id.newId(),
         } as WhpptProductImageData;
         const events = [createEvent('ProductImageAdded', { _id: productId, image: newImage })];
-        Object.assign(product, { domainId, productId, images: product.images ? [...product.images, newImage] : [newImage] });
+        Object.assign(product, { images: product.images ? [...product.images, newImage] : [newImage] });
 
         if (!product.featureImageId) {
           events.push(createEvent('ProductFeatureImageChanged', { _id: productId, featureImageId: newImage._id }));
-          Object.assign(product, { domainId, productId, featureImageId: newImage._id });
+          Object.assign(product, { featureImageId: newImage._id });
         } else if (featureImageId && product.featureImageId !== featureImageId) {
           events.push(createEvent('ProductFeatureImageChanged', { _id: productId, featureImageId }));
-          Object.assign(product, { domainId, productId, featureImageId });
+          Object.assign(product, { featureImageId });
         }
 
         return startTransaction(session => {
