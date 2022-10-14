@@ -30,7 +30,7 @@ const addImage: HttpModule<AddProductImageArgs, WhpptProductImageData> = {
         Object.assign(product, { domainId, productId, images: product.images ? [...product.images, newImage] : [newImage] });
 
         if (!product.featureImageId) {
-          events.push(createEvent('ProductFeatureImageSet', { _id: productId, featureImageId: newImage._id }));
+          events.push(createEvent('ProductFeatureImageChanged', { _id: productId, featureImageId: newImage._id }));
           Object.assign(product, { domainId, productId, featureImageId: newImage._id });
         } else if (featureImageId && product.featureImageId !== featureImageId) {
           events.push(createEvent('ProductFeatureImageChanged', { _id: productId, featureImageId }));
