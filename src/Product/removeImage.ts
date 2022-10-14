@@ -2,31 +2,31 @@ import assert from 'assert';
 import { HttpModule } from '@whppt/api-express';
 import { Product } from './Models/Product';
 
-export type ChangeProductImageArgs = {
+export type RemoveImageArgs = {
   domainId: string;
   productId: string;
   imageId: string;
 };
 
-const changeImage: HttpModule<ChangeProductImageArgs, void> = {
+const removeImage: HttpModule<RemoveImageArgs, void> = {
   authorise({ $identity }, { user }) {
     return $identity.isUser(user);
   },
-  exec({ $database, createEvent }, { domainId, productId, imageId }) {
-    assert(domainId, 'Product requires a Domain Id.');
-    assert(productId, 'Product requires a Product Id.');
+  exec({ $database, setEvent }, { domainId, productId, imageId }) {
+    assert(domainId, 'Domain Id required.');
+    assert(productId, 'Product Id required.');
 
     assert(imageId, 'Image Id is required.');
     return $database.then(({ document, startTransaction }) => {
       return document.fetch<Product>('products', productId).then(product => {
         assert(product, 'Product does not exsist');
 
-        const events = [createEvent('ProductImageRemoved', { _id: productId, imageId })];
-        Object.assign(product, { domainId, productId, images: product.images.filter(_image => _image._id !== imageId) });
+        const events = [setEvent('ProductImageRemoved', { _id: productId, imageId })];
+        Object.assign(product, { images: product.images.filter(_image => _image._id !== imageId) });
 
         const nextFeatureImage = product.images[0];
         if (product.featureImageId === imageId && nextFeatureImage) {
-          events.push(createEvent('ProductFeatureImageChanged', { _id: productId, featureImageId: nextFeatureImage._id }));
+          events.push(setEvent('ProductFeatureImageChanged', { _id: productId, featureImageId: nextFeatureImage._id }));
           Object.assign(product, { domainId, productId, featureImageId: nextFeatureImage._id });
         }
 
@@ -38,4 +38,4 @@ const changeImage: HttpModule<ChangeProductImageArgs, void> = {
   },
 };
 
-export default changeImage;
+export default removeImage;

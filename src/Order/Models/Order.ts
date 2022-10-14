@@ -2,17 +2,17 @@ import { Product } from 'src/Product/Models/Product';
 
 export type Order = {
   _id: string;
-  domainId: string;
+  domainId?: string;
   items: OrderItem[];
-  billingAddress: Address;
-  shippingAddress: Address;
-  contactId: string;
-  discountIds: string;
-  shipping: AusPostShipping;
+  billingAddress?: Address;
+  shippingAddress?: Address;
+  contactId?: string;
+  discountIds?: string;
+  shipping?: AusPostShipping;
   orderStatus: 'pending' | 'pending';
-  payment: Payment;
-  createdAt: Date;
-  updatedAt: Date;
+  payment?: Payment;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type OrderItem = {

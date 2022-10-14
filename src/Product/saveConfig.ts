@@ -11,11 +11,15 @@ export const saveConfig: HttpModule<SaveConfigParams, void> = {
   authorise({ $identity }, { user }) {
     return $identity.isUser(user);
   },
-  exec({ $database }, { productId, key, value }) {
-    return $database.then(({ document }) => {
+  exec({ $database, setEvent }, { productId, key, value }) {
+    return $database.then(({ document, startTransaction }) => {
       return document.fetch<Product>('products', productId).then(product => {
+        const events = [] as any[];
         product.config ? (product.config[key] = value) : (product.config = { [key]: value });
-        return document.save('products', product).then(() => {});
+        events.push(setEvent('ProductConfigSaved', { _id: productId, config: product.config }));
+        return startTransaction(session => {
+          return document.saveWithEvents('products', product, events, { session }).then(() => {});
+        });
       });
     });
   },

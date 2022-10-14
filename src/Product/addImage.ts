@@ -3,14 +3,14 @@ import { HttpModule } from '@whppt/api-express';
 import { Product, WhpptProductImageData } from './Models/Product';
 import { WhpptImageData } from '@whppt/next';
 
-export type ChangeProductImageArgs = {
+export type AddProductImageArgs = {
   domainId: string;
   productId: string;
   featureImageId?: string;
   image: WhpptImageData;
 };
 
-const changeImage: HttpModule<ChangeProductImageArgs, WhpptProductImageData> = {
+const addImage: HttpModule<AddProductImageArgs, WhpptProductImageData> = {
   authorise({ $identity }, { user }) {
     return $identity.isUser(user);
   },
@@ -45,4 +45,4 @@ const changeImage: HttpModule<ChangeProductImageArgs, WhpptProductImageData> = {
   },
 };
 
-export default changeImage;
+export default addImage;
