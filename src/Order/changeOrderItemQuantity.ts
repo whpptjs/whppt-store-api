@@ -30,26 +30,27 @@ const changeOrderItemQuantity: HttpModule<{ productId: string; quantity: number;
             events.push(createEvent('OrderItemAddedToOrder', { _id: order._id, productOrder }));
             Object.assign(order.items, [...order.items, productOrder]);
           } else if (productAlreadyOnOrder.quantity < quantityAsNumber) {
-            productAlreadyOnOrder.quantity = quantityAsNumber;
             events.push(
               createEvent('OrderItemQuantityIncreased', {
                 _id: order._id,
                 productOrderId: productAlreadyOnOrder._id,
                 productId: productAlreadyOnOrder.productId,
                 quantity: quantityAsNumber,
+                previousQuantity: productAlreadyOnOrder.quantity,
               })
             );
-          } else if (productAlreadyOnOrder.quantity > quantityAsNumber) {
             productAlreadyOnOrder.quantity = quantityAsNumber;
-
+          } else if (productAlreadyOnOrder.quantity > quantityAsNumber) {
             events.push(
               createEvent('OrderItemQuantityReduced', {
                 _id: order._id,
                 productOrderId: productAlreadyOnOrder._id,
                 productId: productAlreadyOnOrder.productId,
                 quantity: quantityAsNumber,
+                previousQuantity: productAlreadyOnOrder.quantity,
               })
             );
+            productAlreadyOnOrder.quantity = quantityAsNumber;
           }
 
           if (events.length === 0) return order;
